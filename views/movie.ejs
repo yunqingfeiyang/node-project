@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>电影列表</title>
+    <%- include common %>
+</head>
+<body>
+    <%- include("head",{title:"movie"}) %>
+    <div class="container-fluid container">
+        <div class="row">
+            <div class="form-group col-md-4" style="display:flex">
+                <input  id="keyword" type="text" class="form-control" placeholder="请输入关键字">
+                <button class="btn btn-success" onclick="todoSearch()" >点击搜索</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-danger" onclick="location.href='/movie?year=1'">年份升序</button>
+                <button class="btn btn-info" onclick="location.href='/movie?year=-1'">年份降序</button>
+                <button class="btn btn-primary" onclick="location.href='/movie?rating.average=1'">评分升序</button>
+                <button class="btn btn-warning" onclick="location.href='/movie?rating.average=-1'">评分降序</button>
+            </div>
+        </div>
+        <div class="row">
+            <h2 class="text-primary ">电影列表</h2>
+        <%    result.forEach((item,index)=>{     %>
+                <div class="col-md-3 col-sm-3 col-lg-3">
+                    <div class="thumbnail">
+                        <img src="<%- item.images.medium.replace(/img7/,'img3') %>" style="height:180px;width:100%" alt="">
+                        <div class="caption">
+                            <a href="/comment/index?mid=<%-item.id%>" >
+                                <h4 class="text-primary pull-right"> <%- item.year%>  </h4>
+                                <h4 class="text-danger"> <%- item.title %> </h4>
+                                <p class="text-success"> 评分: <%- item.rating.average %></p>
+                                <p class="text-info"> 导演: <%- item.directors[0].name %></p>
+                                <p class="text-warning"> 分类: <%- item.genres %></p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        <%    })     %>
+        </div>
+        
+
+    </div>
+    <%- include foot %>
+
+    <script>
+        function todoSearch(){
+            location.href="/movie?keyword="+$("#keyword").val();
+        }
+    </script>
+</body>
+</html>

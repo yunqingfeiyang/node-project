@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人中心</title>
+    <%- include common %>
+</head>
+<body>
+    <%- include("head",{title:"my"}) %>
+    <div class="container-fluid">
+        <div class="col-md-4"> 
+            <form >
+                <h2 class="text-primary">个人中心 --- (昵称: <%- result.nickname %>) </h2>
+                <div class="form-group">
+                    <label for="usernameInput">用户名</label>
+                    <input disabled name="username" value="<%- result.username %>"  type="text" class="form-control" id="usernameInput" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="nicknameInput">昵称</label>
+                    <input name="nickname" value="<%- result.nickname %>" type="text" class="form-control" id="nicknameInput" placeholder="请输入昵称">
+                </div>
+                <div class="form-group">
+                    <label for="ageInput">年龄</label>
+                    <input name="age" value="<%- result.age %>" type="number" class="form-control" id="ageInput" placeholder="请输入年龄">
+                </div>
+                <div class="form-group">
+                    <label for="emailInput">邮箱</label>
+                    <input name="email" value="<%- result.email %>" type="email" class="form-control" id="emailInput" placeholder="请输入邮箱">
+                </div>
+            </form>
+            <button type="button" class="btn btn-primary" onclick="changesome()">修改个人信息</button>
+            <button class="btn btn-danger" onclick="location.href='/resetpwd'" >重置密码</button>
+        </div>
+    </div>
+
+    <script>
+        function changesome(){
+            $.ajax({
+                url:"/users/changeinfo",
+                type:"POST",
+                data:{
+                    nickname:$("#nicknameInput").val(),
+                    age:$("#ageInput").val(),
+                    email:$("#emailInput").val()
+                },
+                success(res){
+                    console.log(res);
+                    if(res.code==200){
+                        location.href="/my";  // 刷新页面
+                        
+                    }else{
+                        alert("修改失败");
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>
+

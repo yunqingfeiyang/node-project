@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>重置密码</title>
+    <%- include common %>
+</head>
+<body>
+    <%- include("head",{title:"my"}) %>
+    <div class="container-fluid">
+        <div class="col-md-4"> 
+            <form >
+                <h2 class="text-danger"> 重置密码  <button type="button" class="btn btn-info" onclick="history.go(-1)">返回</button> </h2>
+                <div class="form-group">
+                    <label for="oldpasswordInput">旧密码</label>
+                    <input  type="password" class="form-control" id="oldpasswordInput" placeholder="请输入旧密码">
+                </div>
+                <div class="form-group">
+                    <label for="newpasswordInput">新密码</label>
+                    <input  type="password" class="form-control" id="newpasswordInput" placeholder="请输入新密码">
+                </div>
+            </form>
+            <button class="btn btn-danger" onclick="resetpassword()">重置密码</button>
+        </div>
+    </div>
+
+    <script>
+        function resetpassword(){
+            $.ajax({
+                url:"/users/resetpwd",
+                type:"POST",
+                data:{
+                    oldpassword:$("#oldpasswordInput").val(),
+                    newpassword:$("#newpasswordInput").val()
+                },
+                success(res){
+                    console.log(res);
+                    alert(res.msg);
+                    !!res.type&&(window.location.href="/login");
+                    // alert(res.msg);
+                    // if(res.type){
+                    //     location.href="/login"
+                    // }
+                }
+            })
+        }
+        
+    </script>
+</body>
+</html>
+

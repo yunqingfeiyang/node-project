@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>注册</title>
+    <style>
+    label{
+        display: block;
+        margin:10px;
+    }
+    </style>
+    <%- include common %>
+</head>
+<body>
+    <%- include("head",{title:"register"}) %>
+    <div class="container-fluid">
+         <div class="col-md-4">
+            <form action="/users/register"  method="POST" >
+                <h4 class="text-info">马上注册</h4>
+                <div class="form-group">
+                    <label for="usernameInput">用户名</label>
+                    <input name="username" type="text" class="form-control" id="usernameInput" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="nicknameInput">昵称</label>
+                    <input name="nickname" type="text" class="form-control" id="nicknameInput" placeholder="请输入昵称">
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput">密码</label>
+                    <input name="password" type="password" class="form-control" id="passwordInput" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label for="confirmpwdInput">确认密码</label>
+                    <input name="confirmpwd" type="password" class="form-control" id="confirmpwdInput" placeholder="请输入确认密码">
+                </div>
+                <button type="submit" class="btn btn-warning">注册</button>
+                <button type="reset" class="btn btn-danger">重置</button>
+            </form>
+        </div>
+    </div>
+    <%- include foot %>
+</body>
+</html>

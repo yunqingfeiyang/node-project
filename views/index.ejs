@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <%- include common %>
+  </head>
+  <body>
+    <%-  include("head",{title:"首页"})  %>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+    <!-- <div>NZ1903 努力学习express</div>
+    <h4> <%= msg  %> </h4>
+    <h4> msg </h4>
+    <h4> <%- flag?"我今天很快乐":"我今天学node很知足"  %> </h4>
+    <h5> 用户名===  <%- username %> </h5>
+    <div>
+      <%- oh %>
+    </div> -->
+    <!-- - 输出变量  输出html标签  -->
+    <!-- 一行 js 代码必须包含 起来  -->
+  <%  if(username){  %>
+      <h3>欢迎你 , <%- username %></h3>
+  <%  }else{   %> 
+      <h3>你还没有登录,请马上去登录</h3>
+  <%  }   %>
+
+  <!-- <%  course.map((item,index)=>{  %>
+         <p> <%- item %> --- <%- index%></p>
+  <%  })   %> -->
+
+  <%- include foot %>
+  </body>
+</html>

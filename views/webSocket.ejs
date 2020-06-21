@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOVE聊天室</title>
+    <style>
+        #love-room{
+            width:360px;
+            height:320px;
+            border:2px solid darkorchid;
+            border-radius:6px;
+            margin-bottom:20px;
+            overflow:auto;
+        }
+    </style>
+    <%- include common %>
+</head>
+<body>
+    <%-  include("head",{title:"chat"})  %>
+    <div>
+        <h2>LOVE-聊天室</h2>
+        <div id="love-room">
+            <!-- 接受聊天内容 -->
+        </div>
+        <div>
+            <input type="text" placeholder="请输入聊天内容" id = "word">
+            <input type="button" value="发送内容" id="sendbtn">
+        </div>
+    </div>
+    <%- include foot %>
+
+    <script>
+        //客户端的代码
+        //客户端socket 功能
+        //1.创建客户端socket
+        const ws = new WebSocket("ws://47.105.140.36:3900");//WebSocket  html5新特性
+        //2.连接服务器的socket
+        ws.onopen = function(){
+            //输入昵称
+            ws.send("大家好，我是jecche");//发送一句话到服务器
+        }
+        //3.发送消息给服务器
+        function sendMsg(){
+            console.log(word.value)
+            ws.send(word.value);//id的唯一性
+            word.value="";
+        }
+        sendbtn.onclick = sendMsg
+        //绑定键盘事件
+        document.onkeydown = function(e){
+            if(e.keyCode==13){
+                sendMsg()
+            }
+        }
+        //4.接受服务器发送来的消息
+        ws.onmessage = function(data){
+            console.log(data);
+            document.getElementById("love-room").innerHTML +=`<p>${data.data}</p>`
+        }
+        //5.监听服务器关闭或者异常
+        ws.onclose = function(){
+            console.log("服务器已经关闭")
+        }
+        ws.onerror = function(err){
+            console.log("服务器出现异常"+err)
+        }
+    </script>
+    
+</body>
+</html>

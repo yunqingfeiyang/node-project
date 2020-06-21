@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>电影评论</title>
+    <%- include common %>
+</head>
+<body>
+    <%- include("head",{title:"mlist"}) %>
+    <div class="container-fluid container">
+        <div class="row">
+            <h2 class="text-warning">所有评论--- (用户:<%- username %>)</h2>
+            <div class="form-group col-md-3">
+                <select onchange="setPageSize()" class="form-control"  id="selectcount"  >
+                    <option value="">请选择每页条数</option>
+                    <option value="4" <%- pageSize==4?'selected':'' %> >每页4条</option>
+                    <option value="8" <%- pageSize==8?'selected':'' %> >每页8条</option>
+                    <option value="10" <%- pageSize==10?'selected':'' %> >每页10条</option>
+                    <option value="15" <%- pageSize==15?'selected':'' %> >每页15条</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-hover table-bordered">
+                    <caption class="h2 text-info">评论列表</caption>
+                    <tr class="text-danger text-center">
+                        <td>序号</td>
+                        <td>电影标题</td>
+                        <td>电影</td>
+                        <td>评论标题</td>
+                        <td>评论内容</td>
+                        <td>评论人</td>
+                        <td>时间</td>
+                        <td>操作1</td>
+                        <td>操作2</td>
+                    </tr>
+                <%    if(result.length>0){  %>
+                    <%    result.forEach((item,index)=>{   %>
+                        <tr class="text-center">
+                            <td> <%- index +1  %> </td>
+                            <td> <a href=""> <%-item.mtitle %> </a></td>
+                            <td> <img width="80" height="80" src="<%- item.mpic&&item.mpic.replace(/img7/,'img3') %>" alt=""></td>
+                            <td> <a href=""> <%-item.title %> </a></td>
+                            <td> <%- item.content %></td>
+                            <td> <%-item.username %></td>
+                            <td> <%-item.time %></td>
+                            <td>
+                                <button onclick="setId('<%- item._id%>')" data-toggle="modal" data-target="#delbox" <%- username===item.username?"":"disabled"  %>  class="btn btn-danger">删除</button>
+                            </td>
+                            <td>
+                            <%    if(item.username==username){    %>
+                                    <!-- 曲线救国 onclick 无法直接传递 item   data-item 自定义数据 JSON.stringify 只能用单引号 -->
+                                    <button data-item='<%- JSON.stringify(item) %>' onclick="getItem(this)" data-toggle="modal" data-target="#updatebox" class="btn btn-primary">修改</button>
+                            <%    }else{    %>
+                                    <button class="btn btn-primary">无权限</button>
+                            <%    }  %>
+                            </td>
+                        </tr>
+                    <%    })   %>
+                    <tr>
+                        <td colspan="9">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li class="<%- pageNo-1<1?'disabled':'' %>">
+                                        <a href="/comment/mlist?pageNo=<%- pageNo - 1 %>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                        <li><a href="/comment/mlist?pageNo=<%- pageNo - 2 %>"> <%- pageNo-2 %> </a></li>
+                                        <li><a href="/comment/mlist?pageNo=<%- pageNo - 1 %>"> <%- pageNo-1 %> </a></li>
+                                        <li class="active"><a href="/comment/mlist?pageNo=<%- pageNo %>"> <%- pageNo  %> </a></li>
+                                        <li ><a href="/comment/mlist?pageNo=<%- pageNo + 1 %>"><%- pageNo+1 %> </a></li>
+                                        <li><a href="/comment/mlist?pageNo=<%- pageNo + 2 %>"><%- pageNo+2 %></a></li>
+                                    <li class="<%- pageNo+1 > totalPage ? 'disabled':''   %>">
+                                        <a href="/comment/mlist?pageNo=<%- pageNo +1  %>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        共 <%- total %> 条 / 第 <%- pageNo%> 页     === 
+                                    </li>
+                                    <li>
+                                        共 <%- totalPage%> 页 / 每页 <%- pageSize %> 条 
+                                    </li>
+                                </ul>
+                            </nav>
+                        </td>
+                    </tr>
+                <%    }else{   %>
+                        <tr>
+                            <td colspan="9">
+                                <p class="text-danger">暂无评论,请前往添加评论</p>
+                            </td>
+                        </tr>
+                <%    }   %>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="delbox">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">删除警告</h4>
+            </div>
+            <div class="modal-body">
+                <p>你真的确定要删除吗&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="deleteCommentById()">确定</button>
+            </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="updatebox">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">修改评论</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="titleInput">评论标题</label>
+                    <input   type="text" class="form-control" id="titleInput" placeholder="评论标题">
+                </div>
+                <div class="form-group">
+                    <label for="contentInput">评论内容</label>
+                    <textarea  placeholder="评论内容" class="form-control" id="contentInput" cols="20" rows="10"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" onclick="updateComment()" >修改</button>
+            </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <%- include foot %>
+
+    <script>
+    
+    // 获取_id 
+    var id = null;  // id 名称  特殊的保留字 error 
+    function setId(itemid){  // 形参  跟参数有关 
+        id=itemid;
+        console.log(id);  
+    }
+
+    // 根据 _id 或者 id 删除评论 
+    function deleteCommentById(){
+        console.log(id);
+        $.ajax({
+            url:"/comment/delete",
+            type:"GET",
+            data:{
+                _id:id
+            },
+            success(res){
+                console.log(res);
+                $('#delbox').modal("hide"); // 关闭 modal 
+                window.location.reload();  // 重新加载 
+            }
+        })
+    }
+    // var this = 1
+    var obj = {};
+    function getItem(that){   // this 关键字  
+        // console.log(that);  // button 按钮 
+        // obj = JSON.parse(that.getAttribute("data-item"));
+        obj = JSON.parse($(that).attr("data-item"));
+        console.log(obj);
+        $("#titleInput").val(obj.title);
+        $("#contentInput").val(obj.content);
+    }
+
+    function updateComment(){
+        // 前端 任务 就是把 参数 数据 发送到服务器 
+        $.ajax({
+            url:"/comment/update",   // 修改评论 
+            type:"post",
+            data:{
+                title:$("#titleInput").val(),
+                content:$("#contentInput").val(),
+                id:obj.id   // 自增长ID  唯一 
+            },
+            success(res){
+                console.log(res);
+                $("#updatebox").modal("hide");
+                window.location.reload();
+            }
+        })
+    }
+
+    function setPageSize(){
+        var pageSize = $("#selectcount").val();
+        window.location.href = "/comment/mlist?pageSize="+pageSize;
+    }
+    </script>
+</body>
+</html>

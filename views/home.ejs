@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>主页</title>
+    <!-- 引入 bootstrap  -->
+    <%- include common %>
+</head>
+<body>
+    <%-  include("head",{title:"home"})  %>
+    <div class="container-fluid">
+        <div>
+            <%    if(username){   %>
+                    <h4>欢迎你 , <%- username %> </h4>
+                    <div>
+                        <button class="btn btn-danger" onclick="location.href='/logout'">注销</button>
+                        <button class="btn btn-info" onclick="location.href='/movie'">电影主页</button>
+                    </div>
+            <%    }else{    %> 
+                    <h4>你还没有登录,请马上去登录</h4>
+                    <div>
+                        <button class="btn btn-primary" onclick="location.href='/login'">登录</button>
+                        <button class="btn btn-success" onclick="location.href='/register'">注册</button>
+                    </div>
+            <%    }   %>
+        </div>
+    </div>
+    <%- include foot %>
+</body>
+</html>
